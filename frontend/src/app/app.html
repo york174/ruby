@@ -1,0 +1,185 @@
+<main class="page-container">
+  <header class="page-header">
+    <h1>Lista de Alumnos</h1>
+    <button class="button button-primary" type="button" (click)="nuevoAlumno()">
+      <span aria-hidden="true">+</span>
+      Nuevo Alumno
+    </button>
+  </header>
+
+  <p *ngIf="errorCarga" class="alert alert-error" role="alert">{{ errorCarga }}</p>
+
+  <section class="table-card" aria-label="Alumnos registrados">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Acciones</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Edad</th>
+            <th scope="col">Correo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="cargando">
+            <td class="table-message" colspan="5">Cargando alumnos...</td>
+          </tr>
+          <tr *ngFor="let alumno of alumnos">
+            <td>
+              <div class="row-actions">
+                <button
+                  class="button button-view"
+                  type="button"
+                  (click)="verAlumno(alumno)"
+                  [attr.aria-label]="'Ver a ' + alumno.nombre"
+                >
+                  <span aria-hidden="true">◉</span> Ver
+                </button>
+                <button
+                  class="button button-edit"
+                  type="button"
+                  (click)="editarAlumno(alumno)"
+                  [attr.aria-label]="'Editar a ' + alumno.nombre"
+                >
+                  <span aria-hidden="true">✎</span> Editar
+                </button>
+                <button
+                  class="button button-delete"
+                  type="button"
+                  (click)="eliminarAlumno(alumno)"
+                  [attr.aria-label]="'Eliminar a ' + alumno.nombre"
+                >
+                  <span aria-hidden="true">×</span> Eliminar
+                </button>
+              </div>
+            </td>
+            <td>{{ alumno.nombre }}</td>
+            <td>{{ alumno.apellido }}</td>
+            <td>{{ alumno.edad }}</td>
+            <td>{{ alumno.correo }}</td>
+          </tr>
+          <tr *ngIf="!cargando && alumnos.length === 0">
+            <td class="table-message" colspan="5">Todavía no hay alumnos registrados.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div
+  *ngIf="modalAbierto"
+  class="modal-backdrop"
+  (click)="cerrarModalDesdeFondo($event)"
+>
+  <section
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="modal-header">
+      <h2 id="modal-title">
+        {{ modo === 'crear' ? 'Nuevo alumno' : modo === 'editar' ? 'Editar alumno' : 'Detalle del alumno' }}
+      </h2>
+      <button
+        class="modal-close"
+        type="button"
+        aria-label="Cerrar"
+        (click)="cerrarModal()"
+      >
+        ×
+      </button>
+    </header>
+
+    <div *ngIf="modo === 'ver'" class="detail-list">
+      <div><span>Nombre</span><strong>{{ alumnoActual.nombre }}</strong></div>
+      <div><span>Apellido</span><strong>{{ alumnoActual.apellido }}</strong></div>
+      <div><span>Edad</span><strong>{{ alumnoActual.edad }}</strong></div>
+      <div><span>Correo</span><strong>{{ alumnoActual.correo }}</strong></div>
+    </div>
+
+    <form
+      *ngIf="modo !== 'ver'"
+      #alumnoForm="ngForm"
+      class="alumno-form"
+      (ngSubmit)="guardar(alumnoForm)"
+      novalidate
+    >
+      <label>
+        Nombre
+        <input
+          type="text"
+          name="nombre"
+          [(ngModel)]="alumnoActual.nombre"
+          required
+          maxlength="100"
+          autocomplete="given-name"
+          #nombre="ngModel"
+        />
+        <span *ngIf="nombre.invalid && nombre.touched" class="field-error">Ingresa el nombre.</span>
+      </label>
+
+      <label>
+        Apellido
+        <input
+          type="text"
+          name="apellido"
+          [(ngModel)]="alumnoActual.apellido"
+          required
+          maxlength="100"
+          autocomplete="family-name"
+          #apellido="ngModel"
+        />
+        <span *ngIf="apellido.invalid && apellido.touched" class="field-error">Ingresa el apellido.</span>
+      </label>
+
+      <label>
+        Edad
+        <input
+          type="number"
+          name="edad"
+          [(ngModel)]="alumnoActual.edad"
+          required
+          min="0"
+          max="130"
+          step="1"
+          #edad="ngModel"
+        />
+        <span *ngIf="edad.invalid && edad.touched" class="field-error">Ingresa una edad entre 0 y 130.</span>
+      </label>
+
+      <label>
+        Correo
+        <input
+          type="email"
+          name="correo"
+          [(ngModel)]="alumnoActual.correo"
+          required
+          maxlength="254"
+          autocomplete="email"
+          #correo="ngModel"
+        />
+        <span *ngIf="correo.invalid && correo.touched" class="field-error">Ingresa un correo válido.</span>
+      </label>
+
+      <p *ngIf="errorFormulario" class="alert alert-error" role="alert">{{ errorFormulario }}</p>
+
+      <footer class="modal-actions">
+        <button class="button button-secondary" type="button" (click)="cerrarModal()">Cancelar</button>
+        <button class="button button-primary" type="submit" [disabled]="guardando || alumnoForm.invalid">
+          {{ guardando ? 'Guardando...' : modo === 'editar' ? 'Guardar cambios' : 'Guardar alumno' }}
+        </button>
+      </footer>
+    </form>
+
+    <footer *ngIf="modo === 'ver'" class="modal-actions">
+      <button class="button button-secondary" type="button" (click)="cerrarModal()">Cerrar</button>
+      <button class="button button-primary" type="button" (click)="editarAlumno(alumnoActual)">
+        Editar alumno
+      </button>
+    </footer>
+  </section>
+</div>

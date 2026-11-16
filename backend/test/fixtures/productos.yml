@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nombre: Producto uno
+  precio: 10.00
+
+two:
+  nombre: Producto dos
+  precio: 20.00
