@@ -73,7 +73,8 @@ export class App implements OnInit {
       nombre: this.alumnoActual.nombre.trim(),
       apellido: this.alumnoActual.apellido.trim(),
       edad: this.alumnoActual.edad,
-      correo: this.alumnoActual.correo.trim()
+      correo: this.alumnoActual.correo.trim(),
+      direccion: this.alumnoActual.direccion.trim()
     };
 
     this.guardando = true;
@@ -140,7 +141,7 @@ export class App implements OnInit {
   }
 
   private nuevoFormulario(): AlumnoForm {
-    return { nombre: '', apellido: '', edad: null, correo: '' };
+    return { nombre: '', apellido: '', edad: null, correo: '' , direccion: ''};
   }
 
   private aFormulario(alumno: Alumno | AlumnoForm): AlumnoForm {
@@ -148,7 +149,8 @@ export class App implements OnInit {
       nombre: alumno.nombre,
       apellido: alumno.apellido,
       edad: alumno.edad,
-      correo: alumno.correo
+      correo: alumno.correo,
+      direccion: alumno.direccion
     };
   }
 }

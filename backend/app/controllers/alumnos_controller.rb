@@ -41,7 +41,7 @@ class AlumnosController < ApplicationController
   end
 
   def alumno_params
-    params.require(:alumno).permit(:nombre, :apellido, :edad, :correo)
+    params.require(:alumno).permit(:nombre, :apellido, :edad, :correo, :direccion)
   end
 
   def render_not_found

@@ -19,11 +19,12 @@
             <th scope="col">Apellido</th>
             <th scope="col">Edad</th>
             <th scope="col">Correo</th>
+            <th scope="col">Dirección</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngIf="cargando">
-            <td class="table-message" colspan="5">Cargando alumnos...</td>
+            <td class="table-message" colspan="6">Cargando alumnos...</td>
           </tr>
           <tr *ngFor="let alumno of alumnos">
             <td>
@@ -58,9 +59,10 @@
             <td>{{ alumno.apellido }}</td>
             <td>{{ alumno.edad }}</td>
             <td>{{ alumno.correo }}</td>
+            <td>{{ alumno.direccion }}</td>
           </tr>
           <tr *ngIf="!cargando && alumnos.length === 0">
-            <td class="table-message" colspan="5">Todavía no hay alumnos registrados.</td>
+            <td class="table-message" colspan="6">Todavía no hay alumnos registrados.</td>
           </tr>
         </tbody>
       </table>
@@ -99,6 +101,7 @@
       <div><span>Apellido</span><strong>{{ alumnoActual.apellido }}</strong></div>
       <div><span>Edad</span><strong>{{ alumnoActual.edad }}</strong></div>
       <div><span>Correo</span><strong>{{ alumnoActual.correo }}</strong></div>
+      <div><span>Dirección</span><strong>{{ alumnoActual.direccion }}</strong></div>
     </div>
 
     <form
@@ -163,6 +166,20 @@
           #correo="ngModel"
         />
         <span *ngIf="correo.invalid && correo.touched" class="field-error">Ingresa un correo válido.</span>
+      </label>
+
+      <label>
+        Dirección
+        <input
+          type="text"
+          name="direccion"
+          [(ngModel)]="alumnoActual.direccion"
+          required
+          maxlength="255"
+          autocomplete="street-address"
+          #direccion="ngModel"
+        />
+        <span *ngIf="direccion.invalid && direccion.touched" class="field-error">Ingresa la dirección.</span>
       </label>
 
       <p *ngIf="errorFormulario" class="alert alert-error" role="alert">{{ errorFormulario }}</p>

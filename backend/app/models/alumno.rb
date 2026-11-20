@@ -1,5 +1,5 @@
 class Alumno < ApplicationRecord
-  validates :nombre, :apellido, :correo, presence: true
+  validates :nombre, :apellido, :correo, :direccion, presence: true
   validates :correo, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :edad, numericality: {
     only_integer: true,
